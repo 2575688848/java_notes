@@ -140,7 +140,7 @@ lock-x(A)...unlock(A)...lock-s(B)...unlock(B)...lock-s(C)...unlock(C)
 
 
 
-# 六、Next-Key Locks
+# 四、Next-Key Locks
 
 Next-Key Locks 是 MySQL 的 InnoDB 存储引擎的一种锁实现。
 
