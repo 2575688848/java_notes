@@ -2,8 +2,6 @@
 
 [toc]
 
-[hah](#一、ACID)
-
 # 一、ACID
 
 ### 1. 原子性（Atomicity）
