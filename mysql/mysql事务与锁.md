@@ -61,7 +61,9 @@
 
 ### 锁粒度
 
-MySQL 中提供了两种封锁粒度：行级锁以及表级锁。
+MySQL 中提供了两种封锁粒度：全局锁、行级锁以及表级锁。
+
+全局锁： Flush tables with read lock (FTWRL)、set global readonly=true 两种方式可以开启全局锁。
 
 应该尽量只锁定需要修改的那部分数据，而不是所有的资源。锁定的数据量越少，发生锁争用的可能就越小，系统的并发程度就越高。
 
@@ -152,7 +154,7 @@ Next-Key Locks 是 MySQL 的 InnoDB 存储引擎的一种锁实现。
 
 MVCC 不能解决幻影读问题，Next-Key Locks 就是为了解决这个问题而存在的。在可重复读（REPEATABLE READ）隔离级别下，使用 MVCC + Next-Key Locks 可以解决幻读问题。
 
-#### Record Locks
+#### Record Lock（行锁）
 
 锁定一个记录上的索引，而不是记录本身。
 
@@ -160,16 +162,16 @@ MVCC 不能解决幻影读问题，Next-Key Locks 就是为了解决这个问题
 
 
 
-#### Gap Locks
+#### Gap Lock（间隙锁）
 
 锁定索引之间的间隙，但是不包含索引本身。例如当一个事务执行以下语句，其它事务就不能在 t.c 中插入 15。
 
 ```
-SELECT c FROM t WHERE c BETWEEN 10 and 20 FOR UPDATE;
+SELECT c FROM t WHERE c BETWEEN 10 and 20 FOR UPDATE;  
 ```
 
 
 
-#### Next-Key Locks
+#### Next-Key Lock（临键锁）
 
 它是 Record Locks 和 Gap Locks 的结合，不仅锁定一个记录上的索引，也锁定索引之间的间隙。它锁定一个前开后闭区间，例如一个索引包含以下值：10, 11, 13, and 20，那么就需要锁定以下区间：(10，20]
