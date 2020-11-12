@@ -44,7 +44,79 @@ jvm 在运行时会给每个线程开辟一块内存，用来存放线程单独�
 
 
 
-### 三、JIT 逃逸分析
+### 三、方法内联
+
+方法内联，是指在编译过程中遇到方法调用时，将目标方法的方法体纳入编译范围之中，并取代原方法调用的优化手段。JIT大部分的优化都是在内联的基础上进行的，方法内联是即时编译器中非常重要的一环。
+
+Java服务中存在大量getter/setter方法，如果没有方法内联，在调用getter/setter时，程序执行时需要保存当前方法的执行位置，创建并压入用于getter/setter的栈帧、访问字段、弹出栈帧，最后再恢复当前方法的执行。内联了对 getter/setter的方法调用后，上述操作仅剩字段访问。在C2编译器 中，方法内联在解析字节码的过程中完成。当遇到方法调用字节码时，编译器将根据一些阈值参数决定是否需要内联当前方法的调用。
+
+**方法内联的条件**
+
+编译器的大部分优化都是在方法内联的基础上。所以一般来说，内联的方法越多，生成代码的执行效率越高。但是对于即时编译器来说，内联的方法越多，编译时间也就越长，程序达到峰值性能的时刻也就比较晚。
+
+可以通过虚拟机参数-XX:MaxInlineLevel调整内联的层数，以及1层的直接递归调用（可以通过虚拟机参数-XX:MaxRecursiveInlineLevel调整）。一些常见的内联相关的参数如下表所示：
+
+<div align=middle><img src=".images/image-20201106121642629.png" width="70%" height="70%" /></div>
+
+
+
+**虚函数内联**
+
+内联是JIT提升性能的主要手段，但是虚函数使得内联是很难的，因为在内联阶段并不知道他们会调用哪个方法。
+
+例如，我们有一个数据处理的接口，这个接口中的一个方法有三种实现add、sub和multi，JVM是通过保存虚函数表Virtual Method Table（以下称为VMT）存储class对象中所有的虚函数，class的实例对象保存着一个VMT的指针，程序运行时首先加载实例对象，然后通过实例对象找到VMT，通过VMT找到对应方法的地址，所以虚函数的调用比直接指向方法地址的classic call性能上会差一些。
+
+很不幸的是，Java中所有非私有的成员函数的调用都是虚调用，C2编译器已经足够智能，能够检测这种情况并会对虚调用进行优化。
+
+C2编译器的能力有限，对于一个实现方法的虚调用可以进行优化，但是对于多个实现方法的虚调用就“无能为力”了。
+
+**多实现的虚调用：**
+
+```java
+public class SimpleInliningTest
+{
+    public static void main(String[] args) throws InterruptedException {
+        VirtualInvokeTest obj = new VirtualInvokeTest();
+        VirtualInvoke1 obj1 = new VirtualInvoke1();
+        VirtualInvoke2 obj2 = new VirtualInvoke2();
+        for (int i = 0; i < 100000; i++) {
+            invokeMethod(obj);
+            invokeMethod(obj1);
+        invokeMethod(obj2);
+        }
+        Thread.sleep(1000);
+    }
+
+    public static void invokeMethod(VirtualInvokeTest obj) {
+        obj.methodCall();
+    }
+
+    private static class VirtualInvokeTest {
+        public void methodCall() {
+            System.out.println("virtual call");
+        }
+    }
+
+    private static class VirtualInvoke1 extends VirtualInvokeTest {
+        @Override
+        public void methodCall() {
+            super.methodCall();
+        }
+    }
+    private static class VirtualInvoke2 extends VirtualInvokeTest {
+        @Override
+        public void methodCall() {
+            super.methodCall();
+        }
+    }
+}
+```
+
+
+
+
+
+### 四、JIT 逃逸分析
 
 **jdk 1.7 默认开启**
 
@@ -131,7 +203,11 @@ private static void alloc() {
 
 
 
+**部分逃逸分析**
 
+部分逃逸分析也是Graal对于概率预测的应用。通常来说，如果发现一个对象逃逸出了方法或者线程，JVM就不会去进行优化。
+
+但是Graal编译器依然会去分析当前程序的执行路径，它会在逃逸分析基础上收集、判断哪些路径上对象会逃逸，哪些不会。然后根据这些信息，在不会逃逸的路径上进行锁消除、栈上分配这些优化手段。
 
 
 
