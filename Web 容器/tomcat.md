@@ -270,6 +270,7 @@ processSocket 方法中有 SocketProcessorBase\<S\> sc = processorCache.pop()，
 接着会来到 NioEndpoint 类的 SocketProcessor 类中的 doRun 方法执行  state = getHandler().process(socketWrapper, event)
 
 <font color=red>// 从这一步开始处理 socket </font>
+
 在 AbstractProtocol 类的 process 方法中会执行 state = processor.process(wrapper, status)。
 
 接着会执行到 state = service(socketWrapper) ，再往下会执行到 Http11Processor 类的 service 方法中，
