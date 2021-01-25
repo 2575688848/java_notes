@@ -263,7 +263,7 @@ NioEndpoint 的 Acceptor 类的 run 方法里有 socket = serverSock.accept()，
 
 NioEndpoint 的 Poller 类的 run 方法，调用 processKey，在这个方法里会 processSocket 方法，表示用来处理socket。
 
-processSocket 方法中有 SocketProcessorBase<S> sc = processorCache.pop()，调用 executor.execute(sc)
+processSocket 方法中有 SocketProcessorBase\<S\> sc = processorCache.pop()，调用 executor.execute(sc)
 
 提交到线程池执行 SocketProcessorBase，接着执行 SocketProcessorBase 的 run 和 doRun 方法。在这个方法里做了 Tcp 握手的工作。
 
