@@ -143,7 +143,7 @@ Context是Host的子容器，每个Host中可以定义任意多的Context元素�
 
 
 
-**Context 元素配置 **
+**Context 元素配置**
 
 Context元素最重要的属性是docBase和path，此外reloadable属性也比较常用。
 
