@@ -47,8 +47,6 @@ Main-Class: org.springframework.boot.loader.JarLauncher
 
 
 
-
-
 ### 总结
 
 **红色**部分，解决 `jar` 包中的**类加载**问题：

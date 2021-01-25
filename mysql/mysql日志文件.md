@@ -1,3 +1,32 @@
+### 日志文件写入流程
+
+写入顺序：
+	undo（回滚） -> redo（重放，数据恢复） -> 数据写入磁盘 -> binlog 
+
+
+
+redo ：logbuffer（mysql缓存），oscache（操作系统），redolog file（磁盘）
+
+​	**两阶段提交：**
+
+​	prepare：成功写入redolog （涉及到 redolog 崩溃）
+​	commit：说明 binlog 已经写入成功
+
+![image2020-7-10 11_6_11](.images/image2020-7-10 11_6_11.png)
+
+MySQL 有一个参数：innodb_flush_log_at_trx_commit 能够控制事务提交时，刷 redo log 的策略。
+
+ 目前有**三种策略**：
+
+![image2020-7-10 11_6_43](.images/image2020-7-10 11_6_43.png)
+
+
+
+binlog：binlogCache
+	binlog 写入成功之后，将 redolog 状态置为 commit
+
+
+
 ### redolog
 
 InnoDB 的 redo log 是固定大小的，比如可以配置为一组 4 个文件，每个文件 的大小是 1GB，那么这块“粉板”总共就可以记录 4GB 的操作。从头开始写，写到末尾就 又回到开头循环写，WAL 技术，WAL 的全称 是 Write-Ahead Logging 先写到内存 redolog 中
