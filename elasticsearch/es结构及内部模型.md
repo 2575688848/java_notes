@@ -44,7 +44,7 @@ Lucene是一个Full Text搜索库（也有很多其他形式的搜索库），El
 
 有着许多数据结构
 
-- Inverted Index
+- Inverted Index（倒排索引）
 - Stored Fields
 - Document Values
 - Cache

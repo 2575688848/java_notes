@@ -50,7 +50,7 @@ finalize()方法是对象逃脱死亡命运的最后一次机会，稍候GC将�
 
 ```java
 /**
-	软引用可以和一个引用队列(ReferenceQueue)联联合使用。如果软引用所引用对象被垃圾回收，JAVA虚拟机就会把这个软引用加入到与之关联的引	用队列中。
+	软引用可以和一个引用队列(ReferenceQueue)联联合使用。如果软引用所引用对象被垃圾回收，JAVA虚拟机就会把这个软引用加入到与之关联的引用队列中。
 **/
 ReferenceQueue<String> referenceQueue = new ReferenceQueue<>();
 String str = new String("abc");

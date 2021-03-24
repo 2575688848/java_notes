@@ -24,8 +24,7 @@ Kafka 是由 `Linkedin` 公司开发的，它是一个分布式的，支持多�
 
 分区：主题可以被分为若干个分区（partition），同一个主题中的分区可以不在一个机器上，有可能会部署在多个机器上，由此来实现 kafka 的`伸缩性`，单一主题中的分区有序，但是无法保证主题中所有的分区有序
 
-
-![img](.images/16eb068baff14810.png)
+<img src=".images/16eb068baff14810.png" alt="img" style="zoom:50%;" />
 
 生产者： 向主题发布消息的客户端应用程序称为`生产者`（Producer），生产者用于持续不断的向某个主题发送消息。
 
@@ -33,7 +32,7 @@ Kafka 是由 `Linkedin` 公司开发的，它是一个分布式的，支持多�
 
 消费者群组：生产者与消费者的关系就如同餐厅中的厨师和顾客之间的关系一样，一个厨师对应多个顾客，也就是一个生产者对应多个消费者，`消费者群组`（Consumer Group）指的就是由一个或多个消费者组成的群体。
 
-![img](.images/16eb068bab005524.png)
+<img src=".images/16eb068bab005524.png" alt="img" style="zoom:50%;" />
 
 
 偏移量：`偏移量`（Consumer Offset）是一种元数据，它是一个不断递增的整数值，用来记录消费者发生重平衡时的位置，以便用来恢复数据。
@@ -55,9 +54,9 @@ Kafka 有四个核心API，它们分别是
 - Producer API，它允许应用程序向一个或多个 topics 上发送消息记录
 - Consumer API，允许应用程序订阅一个或多个 topics 并处理为其生成的记录流
 - Streams API，它允许应用程序作为流处理器，从一个或多个主题中消费输入流并为其生成输出流，有效的将输入流转换为输出流。
-- Connector API，它允许构建和运行将 Kafka 主题连接到现有应用程序或数据系统的可用生产者和消费者。例如，关系数据库的连接器可能会捕获对表的所有更改
+- Connector API，它允许构建和运行将 Kafka 主题连接到现有应用程序或数据系统的可. 用生产者和消费者。例如，关系数据库的连接器可能会捕获对表的所有更改
 
-![img](.images/16eb068ba7a2fbdd.png)
+<img src=".images/16eb068ba7a2fbdd.png" alt="img" style="zoom:50%;" />
 
 ### Kafka Producer
 
@@ -162,7 +161,7 @@ class DemoProducerCallBack implements Callback {
 
   这个策略也叫做 **key-ordering** 策略，Kafka 中每条消息都会有自己的key，一旦消息被定义了 Key，那么你就可以保证同一个 Key 的所有消息都进入到相同的分区里面，由于每个分区下的消息处理都是有顺序的，故这个策略被称为按消息键保序策略。
 
-  ![img](.images/16eb068cdc3ca978.png)
+  <img src=".images/16eb068cdc3ca978.png" alt="img" style="zoom:50%;" />
 
 实现这个策略的 partition 方法：
 
@@ -177,11 +176,11 @@ return Math.abs(key.hashCode()) % partitions.size();
 
 Kafka 消费者从属于`消费者群组`。一个群组中的消费者订阅的都是`相同`的主题，每个消费者接收主题一部分分区的消息。下面是一个 Kafka 分区消费示意图。
 
-![img](.images/16eb068eb30222dc.png)
+<img src=".images/16eb068eb30222dc.png" alt="img" style="zoom:33%;" />
 
 Kafka 一个很重要的特性就是，只需写入一次消息，可以支持任意多的应用读取这个消息。换句话说，每个应用都可以读到全量的消息。为了使得每个应用都能读到全量消息，应用需要有不同的消费组。对于上面的例子，假如我们新增了一个新的消费组 G2，而这个消费组有两个消费者，那么就演变为下图这样。
 
-![img](.images/16eb0690843c4d19.png)
+<img src=".images/16eb0690843c4d19.png" alt="img" style="zoom: 33%;" />
 
 两种消费方式
 
@@ -283,11 +282,11 @@ commitSync() 将会提交由 poll() 返回的最新偏移量，如果处理完�
 
 #### 消费者如何进行组内分区分配？
 
-Kafka 默认提供了两种分配策略：Range 和 Round-Robin，StickyAssignor。当然 Kafka 采用了可插拔式的分配策略，你可以创建自己的分配器以实现不同的分配策略。
+Kafka 默认提供了三种分配策略：Range 和 Round-Robin，StickyAssignor。当然 Kafka 采用了可插拔式的分配策略，你可以创建自己的分配器以实现不同的分配策略。
 
 **RangeAssignor**
 
-Kafka默认采用RangeAssignor的分配算法。
+Kafka默认采用RangeAssignor的分配算法。 
 
 RangeAssignor对每个Topic进行独立的分区分配。对于每一个Topic，首先对分区按照分区ID进行排序，然后订阅这个Topic的消费组的消费者再进行排序，之后尽量均衡的将分区分配给消费者。
 

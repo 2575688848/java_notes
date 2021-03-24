@@ -1,3 +1,9 @@
+## 一条 sql 执行的慢的原因
+
+https://mp.weixin.qq.com/s/O42Y37PYm_pJ_H6vcbQ_Lg
+
+
+
 # 一、事务管理
 
 基本术语：

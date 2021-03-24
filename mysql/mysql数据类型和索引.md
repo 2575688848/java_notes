@@ -112,3 +112,4 @@ MySQL 提供了 FROM_UNIXTIME() 函数把 UNIX 时间戳转换为日期，并提
 默认情况下，如果插入时没有指定 TIMESTAMP 列的值，会将这个值设置为当前时间。
 
 应该尽量使用 TIMESTAMP，因为它比 DATETIME 空间效率更高。
+

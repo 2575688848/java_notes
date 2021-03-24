@@ -377,7 +377,7 @@ static long _dictKeyIndex(dict *d, const void *key, uint64_t hash, dictEntry **e
 
 - 它会向前推进重哈希
 - 如果正在重哈希，它会把数据插入到 ht[1]，否则插入到 ht[0]
-- 在对应的 bucket 中插入数据的时候，总是插入到 dictEntry 的头部，因为新数据接下来被访问的概率比较高，这样再次查找它时遍历的次数就少
+- 在对应的 bucket 中插入数据的时候，总是插入到 dictEntry 的头部（头插法），因为新数据接下来被访问的概率比较高，这样再次查找它时遍历的次数就少
 - _dictKeyIndex 函数会检查哈希表是否需要扩容  
 
 ### 扩容

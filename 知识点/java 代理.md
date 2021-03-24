@@ -199,7 +199,7 @@ public void test() {
 
 **小结：**
 
-cglib代理无需实现接口，通过生成类字节码实现代理，比反射稍快，不存在性能问题，但cglib会继承目标对象，需要重写方法，所以目标对象不能为final类
+cglib代理无需实现接口，通过生成类字节码实现代理，性能不如直接使用 jdk 反射实现，cglib会继承目标对象，需要重写方法，所以目标对象不能为final类
 
 
 
@@ -211,7 +211,7 @@ cglib代理无需实现接口，通过生成类字节码实现代理，比反射
 
 
 
-### Instrumentation 代理
+### Instrumentation 代理（运行时增强）
 
 修改目标类的字节码、类装载的时候动态拦截去修改，基于javaagent，-javaagent:yourAgent.jar。
 

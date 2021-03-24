@@ -1,6 +1,6 @@
 ### 复制集
 
-MongoDB复制集(replica set)：MongoDB复制集维护相同数据集的一组mongod进程，复制集是生产部署的基础，具有数据冗余以及高可用性。
+MongoDB复制集(replica set)：MongoDB复制集维护相同数据集的一组mongo进程，复制集是生产部署的基础，具有数据冗余以及高可用性。
 
 为什么要设置复制集（replica set）？
 

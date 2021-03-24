@@ -110,13 +110,9 @@ Lucene将索引文件拆分为了多个文件，下面仅讨论倒排索引部�
 
 Lucene把用于存储Term的索引文件叫Terms Index，它的后缀是`.tip`；
 
-Terms Dictionary的文件后缀称为`.tim`，它是Term与Postings的关系纽带，存储了Term和其对应的Postings文件指针。
+Terms Dictionary的文件后缀称为`.tim`，它记录了Term与Postings的关系，比如说 DocId 信息和 Term 的词频。
 
-把Postings信息分别存储在`.doc`、`.pay`、`.pox`，分别记录Postings的DocId信息和Term的词频、Payload信息、pox是记录位置信息。
-
-
-
-通过Terms Index(.tip)能够快速地在Terms Dictionary(.tim)中找到你的想要的Term，以及它对应的Postings文件指针与Term在Segment作用域上的统计信息。
+通过Terms Index(.tip)能够快速地在Terms Dictionary(.tim)中找到你的想要的Term，以及它对应的Postings文件指针。
 
 
 
@@ -146,7 +142,7 @@ Trie的叶子节点是Container（即是Lucene中的Block）。
 
 
 
-Burst-Trie的Container内部是开放性结构，可能是Binary-Tree，可以也List。Lucene的block是数组。
+Lucene的block是数组。
 
 Lucene中的Block：里面存储的是  term ，包括 Postings 文件指针等信息。
 

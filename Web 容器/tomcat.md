@@ -30,7 +30,7 @@ https://www.cnblogs.com/kismetv/p/7228274.html
 
 `acceptorThreadCount`：用于**接收连接请求的线程数**。默认值为1。多核CPU系统应该增大该值，另外由于长连接的存在，也应该考虑增大该值。
 `maxThreads`：线程池中最多允许存在多少线程用于**处理请求**。默认值为200。它是最大并发处理的数量，但不影响接收线程接收更多的连接。
-`maxConnections`：服务端允许接收和处理的最大连接数。当达到该值后，操作系统还能继续接收额外acceptCount个的连接请求，但这些连接暂时不会被处理。当Connector类型为BIO模型时的默认值等于maxThread的值，当为NIO/NIO2模型时的默认值为10000，当APR时默认长度为8192。
+`maxConnections`：服务端允许接收和处理的最大连接数。当达到该值后，操作系统还能继续接收额外acceptCount个的连接请求，但这些连接暂时不会被处理，会被放到等待队列中。
 `acceptCount`：当所有请求处理线程都处于忙碌状态时，连接请求将进入等待队列，该值设置等待队列的长度。当达到队列最大值后，如果还有新连接请求进入，则会被拒绝。默认队列长度为100。
 
 
@@ -261,7 +261,7 @@ WebApplicationContext：spring 组件，这是IOC容器的核心。
 
 NioEndpoint 的 Acceptor 类的 run 方法里有 socket = serverSock.accept()，表示来接收一个连接的 socket。
 
-NioEndpoint 的 Poller 类的 run 方法，调用 processKey，在这个方法里会 processSocket 方法，表示用来处理socket。
+NioEndpoint 的 Poller 类的 run 方法，调用 processKey，在这个方法里会走到 processSocket 方法，表示用来处理socket。
 
 processSocket 方法中有 SocketProcessorBase\<S\> sc = processorCache.pop()，调用 executor.execute(sc)
 
@@ -298,5 +298,5 @@ connector.getService().getContainer().getPipeline().getFirst().invoke(request, r
 ```java
 HttpServlet -> FrameworkServlet -> DispatcherServlet -> HandlerMapping -> Controller 的某个方法
 
-DispatcherServlet 是由 Servlet 容器管理，和 Spring 的 IOC 容器没有关系，也是 Spring MVC 中唯一的 servlet
+DispatcherServlet 是由 Servlet 容器管理，和 Spring 的 IOC 容器没有关系。
 ```
