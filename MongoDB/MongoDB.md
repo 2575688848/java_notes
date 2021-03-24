@@ -155,7 +155,7 @@ db.collection.createIndex( { address: 1 } )
 
 
 
-#### 2、Relica Set副本集方式
+#### 2、Replica Set副本集方式
 
 ![img](.images/524341-20160929155630438-1271486804.png)
 
