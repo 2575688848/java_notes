@@ -88,23 +88,7 @@ public class JdkDynamicProxy implements InvocationHandler {
 }
 ```
 
-**创建代理工厂类**
 
-```java
-public class JdkDynamicProxyFactory {
-
-    private JdkDynamicProxy jdkDynamicProxy;
-
-    public JdkDynamicProxyFactory(JdkDynamicProxy helloServiceJdkDynamicProxy) {
-        this.jdkDynamicProxy = helloServiceJdkDynamicProxy;
-    }
-
-    public Object getProxy() {
-        Object target = jdkDynamicProxy.getTarget();
-        return Proxy.newProxyInstance(jdkDynamicProxy.getClass().getClassLoader(), target.getClass().getInterfaces(), jdkDynamicProxy);
-    }
-}
-```
 
 **测试**
 
@@ -112,8 +96,7 @@ public class JdkDynamicProxyFactory {
 @Test
 public void test() {
     JdkDynamicProxy jdkDynamicProxy = new JdkDynamicProxy(new HelloServiceImpl());
-    JdkDynamicProxyFactory proxyFactory = new JdkDynamicProxyFactory(jdkDynamicProxy);
-    HelloService proxy = (HelloService) proxyFactory.getProxy();
+    HelloService proxy = (HelloService) Proxy.newProxyInstance(jdkDynamicProxy.getClass().getClassLoader(), jdkDynamicProxy.getTarget.getClass().getInterfaces(), jdkDynamicProxy);
     proxy.hello();
 }
 ```
@@ -130,7 +113,7 @@ JDK动态代理的代理类字节码在创建时，需要实现业务实现类�
 
 ### CGlib 动态代理（运行时增强）
 
-CGlib 动态代理模式基于继承，被代理类生成代理子类，不用实现接口。只需要 被代理类 是非final 类即可。cglib 动态代理底层是借助asm 字节码技术实现。
+CGlib 动态代理模式基于继承，被代理类生成代理子类，不用实现接口，相当于是生成代理类的子类，实现方法的重写。只需要 被代理类 是非final 类即可。cglib 动态代理底层是借助asm 字节码技术实现。
 
 因为是第三方的开源库，所以相比较 JDK 源码来说。JDK 源码无疑使用的人会更多范围也更广，会更佳稳定，而且还有可能在未来的JDK版本中不断优化性能。Cglib更新频率相对来说比较低，而且代码库已经渐趋稳定。
 
@@ -163,25 +146,7 @@ public class CglibDynamicProxy implements MethodInterceptor {
 }
 ```
 
-**创建代理工厂类**
 
-```java
-public class CglibDynamicProxyFactory {
-
-    private CglibDynamicProxy cglibDynamicProxy;
-
-    public CglibDynamicProxyFactory(CglibDynamicProxy cglibDynamicProxy) {
-        this.cglibDynamicProxy = cglibDynamicProxy;
-    }
-
-    public Object getProxy() {
-        Enhancer enhancer = new Enhancer();
-        enhancer.setInterfaces(cglibDynamicProxy.getTarget().getClass().getInterfaces());
-        enhancer.setCallback(cglibDynamicProxy);
-        return enhancer.create();
-    }
-}
-```
 
 **测试**
 
@@ -189,8 +154,10 @@ public class CglibDynamicProxyFactory {
 @Test
 public void test() {
     CglibDynamicProxy cglibDynamicProxy = new CglibDynamicProxy(new HelloServiceImpl());
-    CglibDynamicProxyFactory proxyFactory = new CglibDynamicProxyFactory(cglibDynamicProxy);
-    HelloService proxy = (HelloService) proxyFactory.getProxy();
+    Enhancer enhancer = new Enhancer();
+    enhancer.setInterfaces(cglibDynamicProxy.getTarget().getClass().getInterfaces());
+    enhancer.setCallback(cglibDynamicProxy);
+    HelloService proxy = (HelloService) enhancer.create();
     proxy.hello();
 }
 ```
