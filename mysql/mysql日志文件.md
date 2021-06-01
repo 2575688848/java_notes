@@ -129,7 +129,7 @@ mysqlbinlog  ‑vv data/master.000001 ‑‑start‑position=8900;
 
 但 row 格式的缺点是，很占空间。比如你用一个 delete 语句删掉 10 万 行数据，用 statement 的话就是一个 SQL 语句被记录到 binlog 中，占 用几十个字节的空间。但如果用 row 格式的 binlog，就要把这 10 万条 记录都写到 binlog 中。这样做，不仅会占用更大的空间，同时写 binlog 也要耗费 IO 资源，影响执行速度。 
 
-所以，MySQL 就取了个折中方案，也就是有了 mixed 格式的 binlog。 mixed 格式的意思是，MySQL 自己会判断这条 SQL 语句是否可能引起 主备不一致，如果有可能，就用 row 格式，否则就用 statement 格式。
+所以，MySQL 就取了个折中方案，也就是有了 mixed 格式的 binlog。 mixed 格式的意思是，MySQL 自己会判断这条 SQL 语句是否可能引起 主备不一致，如果有可能，就用 row 格式，否则‘就用 statement 格式。
 
 
 
@@ -163,7 +163,7 @@ MySQL 在 binlog 中记录了这个命令第一次执 行时所在实例的 serv
 
 假设 redo log 写完了，binglog 也已经写完了，这个时候发生了异常重启会怎么样呢？ 这个就要依赖于 MySQL 的处理机制了，MySQL 的处理过程如下：
 
-* 判断 redo log 是否完整（是否是 commit 状态），如果判断是完整的，就立即提交。
+* 判断 redo log 是否是 commit 状态，如果是，就立即提交。
 * 如果 redo log 是预提交但不是 commit 状态，这个时候就会去判断 binlog 是否完整，如果完整就提交 redo log,  不完整就回滚事务。
 
 这样就解决了数据一致性的问题。

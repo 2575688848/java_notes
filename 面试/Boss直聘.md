@@ -48,8 +48,6 @@ DataPumpTask 被提交到线程池来消费上面的那些 DataPumpJob。
 
 每个线程将自己订阅的增量数据，序列化后写到 key 为 CANALMESSAGE 的redis list 列表中。
 
-（⚠️：这样就能保证每个库的增量数据在redis中也是有序的）。
-
 之后会启动 CDCProcessTaskNum（100）数量的 CDCProcessTask 线程来处理上面这些序列化后的数据。
 
 在处理的过程中会根据序列化的数据中的 数据库+数据表 获取到不同的处理类，来处理这个数据。
@@ -67,6 +65,13 @@ DataPumpTask 被提交到线程池来消费上面的那些 DataPumpJob。
 根据从 INDEXMESSAGE 列表里取到信息 goods:345222:insert ，从 memcached 中获取 model 数据。然后构建 SolrInputDocument 写到 Solr 主节点中。
 
 主从同步时间：5 秒钟一次。
+
+
+
+其中 memcache的作用：
+
+1. 作为数据的缓存，代码逻辑分层处理
+2. 在增量更新的时候，比如有个品牌的数据更新，则会先从数据库里根据主键 id 拿到最新的行数据，设置到 memcache 中，然后再从 memcache 中获取商品的信息，把最新的品牌数据和商品数据封装成一个对象写入 solr 引擎中。
 
 
 

@@ -312,7 +312,7 @@ AR：Assigned Replicas。AR 是主题被创建后，分区创建时被分配的�
 
 ISR：In-Sync Replicas。Kafka 中特别重要的概念，指代的是 AR 中那些与 Leader 保 持同步的副本集合。在 AR 中的副本可能不在 ISR 中，但 Leader 副本天然就包含在 ISR 中。
 
-关于 ISR，还有一个常见的面试题目是如何判断副本是否应该属于 ISR。目前的判断 依据是：Follower 副本的 LEO（partition 中当前将要写入数据的 位置/偏移量） 落后 Leader LEO 的时间，是否超过了 Broker 端参数 replica.lag.time.max.ms 值。如果超过了，副本就会被从 ISR 中移除。
+关于 ISR，还有一个常见的面试题目是如何判断副本是否应该属于 ISR。目前的判断 依据是：Follower 副本的 LEO（partition 中当前将要写入数据的 位置/偏移量） 落后 Leader LEO 的时间，是否超过了设置的参数 replica.lag.time.max.ms 值。如果超过了，副本就会被从 ISR 中移除。
 
 
 
