@@ -61,6 +61,10 @@ test            0          5               5               0               -    
 
 ./kafka-console-consumer.sh --bootstrap-server 10.20.0.22:9092 --topic hisearch-search --from-beginning
 
+./kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic hisearch-search --max-messages 1
+
+
+
  
 
 #### 查看topic里的消息量
@@ -72,3 +76,4 @@ test            0          5               5               0               -    
 -2 表示查看的是已经被删除的消息量
 
 两者相减得出当前topic的消息量。
+

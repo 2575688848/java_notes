@@ -8,8 +8,6 @@ kubectl get rs ： 								   查看副本集（一个副本对应一个 pod）
 
 kubectl get pod -n ns1 -o wide | grep v2x：  查看 pod
 
-kubectl exec -it -n ns1 mariadb-master-0 /bin/bash
-
 kubectl logs -f pod名 -n ns1
 
 kubectl get svc(services) -n ns1 | grep mysql (查看 svc 信息)
@@ -34,3 +32,19 @@ kubectl delete deployment ns1-v2x-vehicle-access -n ns1（删除部署，只有�
 
 
 
+#### 交互操作
+
+** 进入 pod 内部
+
+kubectl exec -it -n ns1 mariadb-master-0 /bin/bash
+
+
+
+**  导入数据库数据
+
+kubectl exec -i -n ns1 数据库pod名 -- mysql -u用户名 -p密码 数据库名 < sql文件.sql
+
+
+
+** 导出数据库
+kubectl exec -it -n ns1 mariadb-master-0 -- mysqldump -uroot -prootPassword v2x_platform > v2x_platform.sql;

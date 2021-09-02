@@ -20,7 +20,7 @@
 
 执行 echo 1 > myid
 
-这个文件的作用是标示kafka节点的broker.id
+这个文件的作用是标示kacdfka节点的broker.id
 
  
 
@@ -226,7 +226,7 @@ zookeeper.connect=10.20.0.22:2181,10.20.0.19:2181,10.20.0.20:2181
  
 # Timeout in ms for connecting to zookeeper
 zookeeper.connection.timeout.ms=18000
- 
+
  
 ############################# Group Coordinator Settings #############################
  
