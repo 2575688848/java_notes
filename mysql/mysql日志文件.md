@@ -17,6 +17,8 @@
 
 redo ：logbuffer（mysql缓存），oscache（操作系统），redolog file（磁盘）
 
+![image-20211216102741806](.images/image-20211216102741806.png)
+
 ​	**两阶段提交：**
 
 ​	prepare：成功写入redolog （涉及到 redolog 崩溃）
