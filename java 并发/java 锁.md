@@ -22,11 +22,13 @@
 
 ### 可中断锁
 
-在Java中，synchronized就不是可中断锁，而Lock是可中断锁。
+在Java中，synchronized就不是可中断锁，而Lock是可设置成中断锁的。
 
 如果某一线程A正在执行锁中的代码，另一线程B正在等待获取该锁，可能由于等待时间过长，线程B不想等待了，想先处理其他事情，我们可以让它中断自己或者在别的线程中中断它，这种就是可中断锁。
 
 Lock 里的 lockInterruptibly() 的用法体现了Lock 的可中断性。
+
+Object.wait, Thread.join，Thread.sleep，ReentrantLock.lockInterruptibly 这些会抛出受检异常 InterruptedException 的都会被中断。synchronized，ReentrantLock.lock 的锁竞争阻塞是不会被中断的，interrupt 并不会强制终止线程，而是会将线程设置成 interrupted 状态。
 
 
 
@@ -149,6 +151,27 @@ Monitor是线程私有的数据结构，每一个线程都有一个可用monitor
 一旦有第二个线程访问这个对象，因为偏向锁不会主动释放，所以第二个线程可以看到对象时偏向状态，这时表明在这个对象上已经存在竞争了，检查原来持有该对象锁的线程是否依然存活，如果挂了，则可以将对象变为无锁状态，然后重新偏向新的线程，如果原来的线程依然存活，则马上执行那个线程的操作栈，检查该对象的使用情况，如果仍然需要持有偏向锁，则偏向锁升级为轻量级锁，（**偏向锁就是这个时候升级为轻量级锁的**）。如果不存在使用了，则可以将对象回复成无锁状态，然后重新偏向。
 
 轻量级锁认为竞争存在，但是竞争的程度很轻，一般两个线程对于同一个锁的操作都会错开，或者说稍微等待一下（自旋），另一个线程就会释放锁。 但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有第三个来访时，轻量级锁膨胀为重量级锁，重量级锁使除了拥有锁的线程以外的线程都阻塞，防止CPU空转。
+
+
+
+#### 线程阻塞原理
+
+```c
+public:
+  ParkEvent * _ParkEvent ;    // for synchronized()
+  ParkEvent * _SleepEvent ;   // for Thread.sleep
+// JSR166 per-thread parker
+private:
+  Parker*    _parker;
+```
+
+从注释上可以看出分别是用于 synchronized 的阻塞，Thread.sleep 的阻塞还有用于 UnSafe 的线程阻塞。
+
+synchronized 是通过 monitorenter 和 monitorexit ，acc_synchronizor 实现。
+
+lock 是通过 LockSupport 的 park 方法实现，底层调用的是 UnSafe 的park 方法。
+
+LockSupport 的 park 方法是不可重入的，连续调用两次会阻塞当前线程。
 
 
 

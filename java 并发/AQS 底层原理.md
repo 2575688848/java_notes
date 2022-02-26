@@ -34,11 +34,11 @@ protected final boolean compareAndSetState(int expect, int update) {
 
 #### 获取锁
 
-获取资源的时候会调用`acquire()`方法，这里面会调用`tryAcquire()`方法去设置`state`变量，如果失败的话。就把当前线程封装成一个`Node`中存入 AQS 的CLH 队列。
+获取资源的时候会调用`acquire()`方法，在这里面会调用`tryAcquire()`方法去设置`state`变量，如果失败的话。就把当前线程封装成一个`Node`中存入 AQS 的CLH 队列。
 
 #### 释放锁
 
-释放资源的时候是调用`realase()`方法，会调用`tryRelease()`方法修改`state`变量，调用成果后会去唤醒队列中`Node`里的线程，`unparkSuccessor()`方法就是判断当前`state`变量是否符合唤醒的标准，如果合适就唤醒，否则继续放回队列。
+释放资源的时候是调用`realase()`方法，会调用`tryRelease()`方法修改`state`变量，调用成功后会去唤醒队列中`Node`里的线程，`unparkSuccessor()`方法就是判断当前`state`变量是否符合唤醒的标准，如果合适就唤醒，否则继续放回队列。
 
 
 
@@ -92,4 +92,4 @@ public static void main(String[] args) throws InterruptedException {
 
 这个对象里面有一个队列，当调用`await()`方法的时候会存入一个`Node`节点到这个队列中，并且调用`park()`方法阻塞当前线程，释放当前线程的锁。
 
-而调用`singal()`方法则会移除内部类中的队列头部的`Node`，然后放入`AQS`中的队列中等待执行机会。
+而调用`singal()`方法则会移除内部类中的队列头部的`Node`，然后放入`AQS`中的 CLH 队列中等待执行机会。

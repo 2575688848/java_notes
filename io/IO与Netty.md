@@ -1,3 +1,5 @@
+[toc]
+
 ### JAVA IO 模型
 
 #### BIO（Blocking IO）
