@@ -34,7 +34,7 @@
 
   docker run -d -p 8081:8080 -p 80:80 tomcat（-d 是后台运行，-p是指定宿主机端口和docker端口的对应）
 
-  docker run --rm -e MYSQL_ROOT_PASSWORD=123 -p 3306:3306 mysql:5.6
+  docker run --rm -e MYSQL_ROOT_PASSWORD=123 -p 3306:3306 mysql:5.6!B@iduV2X
 
   docker run -i -t -v /home/wangjie/tomcat8:/home/wangjie --name 89796a java:1.0 /bin/bash
 
