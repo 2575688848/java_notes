@@ -38,3 +38,39 @@
  }
  代理到URL：http://127.0.0.1/aaatest.html
 
+
+
+### 配置示例
+
+// 前端路由
+
+location /iot-data-open {
+        proxy_pass https://172.29.1.55:9001/iot-data-open;
+}
+
+// http 路由
+
+location /aiot/platform {
+        proxy_pass http://172.29.1.54:8891;
+        proxy_http_version 1.1;
+        proxy_read_timeout 3600s;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host:$server_port;
+        proxy_ignore_client_abort on;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+}
+
+// ws 路由、协议升级
+
+location /aiot/platform/ws/ {
+        proxy_pass http://172.29.1.52:8925/ws/;
+        proxy_http_version 1.1;
+        proxy_read_timeout 3600s;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
