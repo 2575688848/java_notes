@@ -102,7 +102,7 @@ Heap Configuration:  ##堆配置情况，也就是JVM参数配置的结果[平�
  
    OldSize          = 5439488 (5.1875MB) ##老年代大小
  
-   NewRatio         = 2  ##新生代比例
+   NewRatio         = 2  ## old/new 的大小比例. 默认值 2.
  
    SurvivorRatio    = 8 ##新生代与suvivor的比例
  
@@ -184,6 +184,8 @@ Perm Generation: ##永久代使用情况
 
 
 **jmap -dump pid**
+
+jmap -dump:format=b,file=D:\test\heap.hprof 6956
 
 可生成 java 进程的一个堆快照文件dump.hprof，压缩成 tar.gz 格式。
 
